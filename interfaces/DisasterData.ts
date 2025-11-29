@@ -16,4 +16,13 @@ export interface DisasterData {
   sekolah_rusak_berat: number;
 }
 
+export interface DeceasedData {
+  id: string;
+  no: number | null;
+  name: string;
+  umur: string;
+  alamat: string;
+  description: string;
+}
+
 export type SheetValues = (string | null | undefined)[][];

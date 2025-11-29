@@ -1,4 +1,8 @@
-import { DisasterData, SheetValues } from "../interfaces/DisasterData";
+import {
+  DeceasedData,
+  DisasterData,
+  SheetValues,
+} from "../interfaces/DisasterData";
 
 const cleanNumber = (value: string | null | undefined): number => {
   if (typeof value === "string") {
@@ -50,4 +54,38 @@ export function mapSheetData(sheetData: SheetValues): DisasterData[] {
       };
     })
     .filter((record): record is DisasterData => record !== null);
+}
+
+export function mapSheetDataDeceased(sheetData: SheetValues): DeceasedData[] {
+  if (!sheetData || sheetData.length < 3) {
+    return [];
+  }
+
+  const dataRows = sheetData.slice(1, sheetData.length - 2);
+
+  return dataRows
+    .map((row, index): DeceasedData | null => {
+      if (row.length < 2 || !row[1]) {
+        return null;
+      }
+
+      const name = String(row[1]).trim();
+      if (name === "") {
+        return null;
+      }
+
+      if (!row[2]) {
+        return null;
+      }
+
+      return {
+        id: (index + 1).toString(),
+        no: cleanNumber(row[0]) || null,
+        name: name,
+        umur: String(row[2]).trim(),
+        alamat: String(row[3]).trim(),
+        description: String(row[4]).trim(),
+      };
+    })
+    .filter((record): record is DeceasedData => record !== null);
 }

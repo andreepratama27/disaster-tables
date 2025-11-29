@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
   Table,
@@ -18,18 +17,24 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Upload, Search, AlertTriangle } from "lucide-react";
-import { UploadDialog } from "@/components/upload-dialog";
+import { Search, AlertTriangle, ArrowRight } from "lucide-react";
 import { DisasterData } from "@/interfaces/DisasterData";
+import { useRouter } from "next/navigation";
 
 interface DisasterDashboardProps {
   initialData: DisasterData[];
+  lastUpdate: any;
 }
 
-export function DisasterDashboard({ initialData }: DisasterDashboardProps) {
-  const [data, setData] = useState<DisasterData[]>(initialData);
+export function DisasterDashboard({
+  initialData,
+  lastUpdate,
+}: DisasterDashboardProps) {
+  const [data] = useState<DisasterData[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
   const [isUploadOpen, setIsUploadOpen] = useState(false);
+
+  const router = useRouter();
 
   // Filter data based on search term
   const filteredData = useMemo(() => {
@@ -82,9 +87,18 @@ export function DisasterDashboard({ initialData }: DisasterDashboardProps) {
     );
   }, [filteredData]);
 
+  const lastUpdateDate = lastUpdate && lastUpdate[0] && lastUpdate[0][1];
+
   return (
     <div className="container mx-auto py-8 px-4 md:px-6">
       <div className="flex flex-col gap-6">
+        <div className="flex justify-center items-center">
+          <img
+            src="https://images.spr.so/cdn-cgi/imagedelivery/j42No7y-dcokJuNgXeA0ig/b5126efa-e9a0-4cfd-9763-be836e0861ed/image/w=640,quality=90,fit=scale-down"
+            alt="Logo"
+            className="h-42 mb-12"
+          />
+        </div>
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -96,14 +110,10 @@ export function DisasterDashboard({ initialData }: DisasterDashboardProps) {
                 Data Bencana Banjir Bandang dan Longsor
               </h1>
               <p className="text-muted-foreground text-sm md:text-base">
-                Tanggal 29 November Pukul 08.00 2025
+                Update Terakhir : {lastUpdateDate || "Tanggal tidak tersedia"}
               </p>
             </div>
           </div>
-          <Button onClick={() => setIsUploadOpen(true)} className="w-fit">
-            <Upload className="mr-2 h-4 w-4" />
-            Upload Spreadsheet
-          </Button>
         </div>
 
         {/* Summary Cards */}
@@ -118,12 +128,20 @@ export function DisasterDashboard({ initialData }: DisasterDashboardProps) {
               </CardTitle>
             </CardHeader>
           </Card>
-          <Card>
-            <CardHeader className="pb-2">
-              <CardDescription className="text-xs">Meninggal</CardDescription>
+          <Card
+            className="cursor-pointer hover:bg-destructive/10 transition-colors"
+            onClick={() => router.push("/daftar-korban")}
+          >
+            <CardHeader className="pb-2 relative">
+              <CardDescription className="text-xs flex items-center justify-between">
+                Meninggal
+              </CardDescription>
               <CardTitle className="text-2xl md:text-3xl text-destructive">
                 {totals.meninggal}
               </CardTitle>
+              <div className="absolute right-4 top-1/2 -translate-y-1/2">
+                <ArrowRight className="h-8 w-8 text-destructive" />
+              </div>
             </CardHeader>
           </Card>
           <Card>
@@ -350,15 +368,6 @@ export function DisasterDashboard({ initialData }: DisasterDashboardProps) {
           </div>
         )}
       </div>
-
-      <UploadDialog
-        isOpen={isUploadOpen}
-        onClose={() => setIsUploadOpen(false)}
-        onDataUploaded={(newData) => {
-          setData(newData);
-          setIsUploadOpen(false);
-        }}
-      />
     </div>
   );
 }
