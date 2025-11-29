@@ -14,6 +14,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Search, AlertTriangle } from "lucide-react";
 import { DeceasedData } from "@/interfaces/DisasterData";
 import { useRouter } from "next/navigation";
+import { Footer } from "./footer";
 
 interface DeceasedVictimsProps {
   initialData: DeceasedData[];
@@ -126,6 +127,8 @@ export function DeceasedVictims({
             </div>
           </CardContent>
         </Card>
+
+        <Footer />
 
         {filteredData.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">

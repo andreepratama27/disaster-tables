@@ -20,6 +20,7 @@ import {
 import { Search, AlertTriangle, ArrowRight } from "lucide-react";
 import { DisasterData } from "@/interfaces/DisasterData";
 import { useRouter } from "next/navigation";
+import { Footer } from "./footer";
 
 interface DisasterDashboardProps {
   initialData: DisasterData[];
@@ -32,7 +33,6 @@ export function DisasterDashboard({
 }: DisasterDashboardProps) {
   const [data] = useState<DisasterData[]>(initialData);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isUploadOpen, setIsUploadOpen] = useState(false);
 
   const router = useRouter();
 
@@ -361,6 +361,8 @@ export function DisasterDashboard({
             </div>
           </CardContent>
         </Card>
+
+        <Footer />
 
         {filteredData.length === 0 && (
           <div className="text-center py-12 text-muted-foreground">

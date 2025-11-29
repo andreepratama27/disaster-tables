@@ -2,10 +2,12 @@ import { google, sheets_v4 } from "googleapis";
 
 type SheetValues = sheets_v4.Schema$ValueRange["values"];
 
-export async function getSheetData(range: string): Promise<SheetValues> {
+export async function getSheetData(
+  range: string,
+  spreadsheetId: string
+): Promise<SheetValues> {
   const clientEmail = process.env.GOOGLE_SHEETS_CLIENT_EMAIL;
   const privateKey = process.env.GOOGLE_SHEETS_PRIVATE_KEY;
-  const spreadsheetId = process.env.SPREADSHEET_ID;
 
   if (!clientEmail || !privateKey || !spreadsheetId) {
     console.error("Missing Google Sheets environment variables.");
